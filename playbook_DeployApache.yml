@@ -3,7 +3,7 @@
   hosts: myhosts
   become:  yes
   vars:
-    apache_Document_root: /var/www/html
+    apache_document_root: /var/www/html  
     apache_server_name: mywebsite.local
     allowed_ips: 
       - 192.168.1.10
@@ -26,8 +26,7 @@
         group: root
       notify: Restart Apache # do this if file happen change
     - name: enable apache site configuration # run a specific command in apache to enable site configuration -> thing in apache
-      ansible.builtin.command: 
-        cmd: e2ensite 	 000-default.conf  
+      ansible.builtin.command: e2ensite 000-default.conf  
       notify: Restart Apache
     - name: enable , start to apache 
       ansible.builtin.service:
