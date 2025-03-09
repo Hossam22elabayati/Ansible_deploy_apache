@@ -1,0 +1,41 @@
+---
+- name: Deploy apache web server with white list ip 
+  hosts: myhosts
+  become:  yes
+  vars:
+    apache_Document_root: /var/www/html
+    apache_server_name: mywebsite.local
+    allowed_ips: 
+      - 192.168.1.10
+      - 192.168.1.2
+      - 192.168.58.143
+      - 192.168.58.144
+      - 192.168.58.130 
+  tasks:
+    - name: install apache 
+      ansible.builtin.apt:
+        name: apache2
+        state: present   # latest -> if enter to apache again new version upgrade to it 
+        update_cache: yes
+    - name: Deploy apache config template
+      ansible.builtin.template:
+        src: apache.conf.j2
+        dest: /etc/apache2/sites-available/000-default.conf # default path to conf to read website 
+        mode: '0644'
+        owner: root
+        group: root
+      notify: Restart Apache # do this if file happen change
+    - name: enable apache site configuration # run a specific command in apache to enable site configuration -> thing in apache
+      ansible.builtin.command: 
+        cmd: e2ensite 	 000-default.conf  
+      notify: Restart Apache
+    - name: enable , start to apache 
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: true    
+  handlers:
+  - name: Restart Apache
+    ansible.builtin.service:
+      name: apache2 
+      state: restarted
