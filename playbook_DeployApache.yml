@@ -2,6 +2,7 @@
 - name: Deploy apache web server with white list ip 
   hosts: myhosts
   become:  yes
+  become_method: sudo
   vars:
     apache_document_root: /var/www/html  
     apache_server_name: mywebsite.local
@@ -26,7 +27,9 @@
         group: root
       notify: Restart Apache # do this if file happen change
     - name: enable apache site configuration # run a specific command in apache to enable site configuration -> thing in apache
-      ansible.builtin.command: e2ensite 000-default.conf  
+      ansible.builtin.command: a2ensite 000-default.conf
+      environment:
+        PATH: "/usr/sbin:/sbin:/bin:/usr/bin"   
       notify: Restart Apache
     - name: enable , start to apache 
       ansible.builtin.service:
