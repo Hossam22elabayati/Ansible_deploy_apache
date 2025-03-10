@@ -12,11 +12,13 @@ Properly configured inventory file.
 
 SSH key-based authentication set up between the control node and managed nodes.
 
-Project Structure
+Project Structure : 
 
-project4/
 ├── ansible.cfg
 ├── inventory
 ├── playbook_DeployApache.yml
 ├── apache.conf.j2
 └── README.md
+
+Verfiy & Test Screenshots :
+
